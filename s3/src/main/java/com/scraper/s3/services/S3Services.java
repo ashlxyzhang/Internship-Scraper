@@ -4,5 +4,4 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class S3Services {
-    private final AmazonS
 }
