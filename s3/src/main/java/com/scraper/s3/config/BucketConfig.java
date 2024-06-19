@@ -11,8 +11,6 @@ import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 
-import jakarta.annotation.PostConstruct;
-
 @Configuration
 public class BucketConfig {
 
@@ -21,12 +19,6 @@ public class BucketConfig {
 
     @Value("${aws.secret.key}")
     private String awsSecretKey;
-
-    @PostConstruct
-    public void init() {
-        System.out.println("AWS Access Key: " + awsAccessKey);
-        System.out.println("AWS Secret Key: " + awsSecretKey);
-    }
 
     @Bean
     public AmazonS3 getS3Client() {
