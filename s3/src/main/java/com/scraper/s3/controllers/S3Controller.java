@@ -1,5 +1,7 @@
 package com.scraper.s3.controllers;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +47,13 @@ public class S3Controller {
     @PostMapping("/putObject/{bucketName}/{objectName}/{filePath}")
     public void putObject(@PathVariable String bucketName, @PathVariable String objectName,
             @PathVariable String filePath) {
-        s3Service.putObject(bucketName, objectName, filePath);
+        try {
+            String decoded = URLDecoder.decode(filePath, StandardCharsets.UTF_8.toString());
+            s3Service.putObject(bucketName, objectName, decoded);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
     }
 
 }

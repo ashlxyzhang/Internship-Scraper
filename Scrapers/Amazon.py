@@ -14,6 +14,7 @@ def Amazon(driver):
     data = get_all_data([], driver)
     df = pd.DataFrame(data, columns=["Name", "Link"])
     df.to_csv("./CSV/amazon.csv")
+    return df
 
 
 def get_data(data, driver):

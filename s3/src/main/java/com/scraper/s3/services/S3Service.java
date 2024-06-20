@@ -40,8 +40,8 @@ public class S3Service {
     public void putObject(String bucketName, String objectName, String filePath) {
         try {
             s3Client.putObject(bucketName, objectName, new File(filePath));
-        } catch (AmazonServiceException e) {
-            System.err.println(e.getErrorMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
             System.exit(1);
         }
     }
