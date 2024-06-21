@@ -43,7 +43,7 @@ public class S3Controller {
     }
 
     @GetMapping("/object/{bucketName}/{objectName}")
-    public S3Object getObject(@PathVariable String bucketName, @PathVariable String objectName) {
+    public String getObject(@PathVariable String bucketName, @PathVariable String objectName) {
         return s3Service.getObject(bucketName, objectName);
     }
 

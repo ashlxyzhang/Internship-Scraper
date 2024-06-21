@@ -1,6 +1,7 @@
 package com.scraper.s3.services;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,9 @@ import com.amazonaws.services.s3.model.Bucket;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 @Service
 public class S3Service {
@@ -32,9 +36,20 @@ public class S3Service {
         return objs;
     }
 
-    public S3Object getObject(String bucketName, String objectName) {
+    public String getObject(String bucketName, String objectName) {
         S3Object obj = s3Client.getObject(bucketName, objectName);
-        return obj;
+        BufferedReader reader = new BufferedReader(new InputStreamReader(obj.getObjectContent()));
+        try {
+            String line = reader.readLine();
+            String result = "";
+            while (line != null) {
+                result += line + "\n";
+                line = reader.readLine();
+            }
+            return result;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void putObject(String bucketName, String objectName, File file) {
@@ -46,5 +61,4 @@ public class S3Service {
             System.exit(1);
         }
     }
-
 }
