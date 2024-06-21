@@ -1,4 +1,4 @@
-import os
+import io
 import pandas as pd
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -24,7 +24,13 @@ def Chase(driver):
             data = get_tab_data([], driver)
     
     df = pd.DataFrame(data, columns=['Name', 'Link'])
-    df.to_csv("./CSV/chase.csv")
+    
+    csv_buffer = io.StringIO()
+    df.to_csv(csv_buffer, index=False)
+    csv_string = csv_buffer.getvalue()
+    csv_buffer.close()
+
+    return csv_string
 
 def get_tab_data(data, driver):
     internships = WebDriverWait(driver, 10).until(

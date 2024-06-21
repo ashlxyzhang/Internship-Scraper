@@ -6,6 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
 
 import pandas as pd
+import io
 
 def Amazon(driver):
     url = "https://amazon.jobs/en/search?offset=0&result_limit=10&sort=recent&country%5B%5D=USA&category_type=studentprograms"
@@ -13,8 +14,13 @@ def Amazon(driver):
 
     data = get_all_data([], driver)
     df = pd.DataFrame(data, columns=["Name", "Link"])
-    df.to_csv("./CSV/amazon.csv")
-    return df
+    
+    csv_buffer = io.StringIO()
+    df.to_csv(csv_buffer, index=False)
+    csv_string = csv_buffer.getvalue()
+    csv_buffer.close()
+
+    return csv_string
 
 
 def get_data(data, driver):

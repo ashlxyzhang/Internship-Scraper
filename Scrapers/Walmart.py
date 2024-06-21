@@ -1,3 +1,4 @@
+import io
 import pandas as pd
 import time
 from selenium.webdriver.common.by import By
@@ -16,7 +17,13 @@ def Walmart(driver):
 
     data = get_data([], driver)
     df = pd.DataFrame(data, columns=['Name', 'Link'])
-    df.to_csv("./CSV/walmart.csv")
+    
+    csv_buffer = io.StringIO()
+    df.to_csv(csv_buffer, index=False)
+    csv_string = csv_buffer.getvalue()
+    csv_buffer.close()
+
+    return csv_string
 
 
 def get_data(data, driver):
