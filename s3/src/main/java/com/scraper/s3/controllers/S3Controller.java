@@ -10,7 +10,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.services.s3.model.Bucket;
 import com.amazonaws.services.s3.model.ObjectListing;
-import com.amazonaws.services.s3.model.S3Object;
 import com.scraper.s3.services.S3Service;
 
 import org.springframework.web.bind.annotation.GetMapping;

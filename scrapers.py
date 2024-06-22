@@ -22,9 +22,10 @@ try:
         func = getattr(m, module)
 
         # getting new csv from scraper
-        csv = func(driver)
+        new_csv = func(driver)
+        new_df = pd.read_csv(io.StringIO(new_csv))
         logging.info(f'{module} done')
-        logging.info(f'CSV length: {len(csv)}')
+        logging.info(f'CSV length: {len(new_csv)}')
 
         objectName = module.lower() + ".csv"
         filePath = csv_path + objectName
@@ -33,14 +34,16 @@ try:
         response = requests.get(f'{upload_endpoint}/object/{bucketName}/{objectName}')
         if response.status_code == 200:
             curr_csv = response.content.decode('utf-8')
-            df = pd.read_csv(io.StringIO(curr_csv))
+            curr_df = pd.read_csv(io.StringIO(curr_csv))
         else:
             raise Exception("Failed to get current csv from s3")
         
-        # compare two csv
+        # compare two df
+        merged_df = pd.merge(new_df, curr_df, how='left', indicator=True)
+        result_df = merged_df[merged_df['_merge'] == 'left_only'].drop(columns=['_merge'])
         
         # uploading new csv to s3
-        files = {'file': (f'{objectName}', csv, 'text/csv')}
+        files = {'file': (f'{objectName}', new_csv, 'text/csv')}
         response = requests.post(f'{upload_endpoint}/putObject/{bucketName}/{objectName}', files=files)
         if response.status_code == 200:
             logging.info(f'Upload complete: {response}')
