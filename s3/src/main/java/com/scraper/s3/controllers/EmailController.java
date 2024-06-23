@@ -24,8 +24,8 @@ public class EmailController {
     @Autowired
     private EmailService emailService;
 
-    @GetMapping("/send/{to}/{subject}")
-    public void sendEmail(@PathVariable String to, @PathVariable String subject, @RequestParam String text) {
+    @GetMapping("/send/{to}")
+    public void sendEmail(@PathVariable String to, @RequestParam String text) {
         ObjectMapper objectMapper = new ObjectMapper();
         HashMap<String, ArrayList<ArrayList<String>>> textMap;
         try {
@@ -35,7 +35,7 @@ public class EmailController {
             throw new RuntimeException("Failed to parse JSON", e);
         }
         try {
-            emailService.sendEmail(to, subject, textMap);
+            emailService.sendEmail(to, textMap);
         } catch (MessagingException e) {
             e.printStackTrace();
         }
