@@ -14,6 +14,7 @@ def Paycom(driver):
 
     data = get_all_data([], driver)
     df = pd.DataFrame(data, columns=["Name", "Link"])
+    df.to_csv("./CSV/paycom.csv")
     
     csv_buffer = io.StringIO()
     df.to_csv(csv_buffer, index=False)

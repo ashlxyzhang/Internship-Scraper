@@ -17,6 +17,7 @@ def Walmart(driver):
 
     data = get_data([], driver)
     df = pd.DataFrame(data, columns=['Name', 'Link'])
+    df.to_csv("./CSV/walmart.csv")
     
     csv_buffer = io.StringIO()
     df.to_csv(csv_buffer, index=False)
