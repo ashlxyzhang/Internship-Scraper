@@ -7,11 +7,13 @@ import pandas as pd
 import requests
 from selenium import webdriver
 
-driver = webdriver.Chrome()
+chrome_options = webdriver.ChromeOptions()
+chrome_options.add_argument("--headless")
+
+driver = webdriver.Chrome(options=chrome_options)
 logging.basicConfig(level=logging.INFO)
 
 bucketName = "internships-summer-2025"
-csv_path = "/Users/ashley/Documents/repos/Internship Scraper/CSV/"
 upload_endpoint = f"http://localhost:8080/api/s3"
 email_endpoint = f"http://localhost:8080/api/email/send/ashlxyzhang@tamu.edu"
 
@@ -32,7 +34,6 @@ try:
         logging.info(f'CSV length: {len(new_csv)}')
 
         objectName = module.lower() + ".csv"
-        filePath = csv_path + objectName
 
         # get current csv from s3
         response = requests.get(f'{upload_endpoint}/object/{bucketName}/{objectName}')
