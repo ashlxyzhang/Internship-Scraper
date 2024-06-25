@@ -40,16 +40,21 @@ try:
         if response.status_code == 200:
             curr_csv = response.content.decode('utf-8')
             curr_df = pd.read_csv(io.StringIO(curr_csv))
+
+            # compare two df
+            merged_df = pd.merge(new_df, curr_df, how='left', indicator=True)
+            result_df = merged_df[merged_df['_merge'] == 'left_only'].drop(columns=['_merge'])
+
+            if len(result_df.values) != 0:
+                new_data[module.capitalize()] = result_df.values.tolist()
+
+        elif response.status_code == 500:
+            if len(new_df.values) != 0:
+                new_data[module.capitalize()] = new_df.values.tolist()
+
         else:
             raise Exception("Failed to get current csv from s3")
         
-        # compare two df
-        merged_df = pd.merge(new_df, curr_df, how='left', indicator=True)
-        result_df = merged_df[merged_df['_merge'] == 'left_only'].drop(columns=['_merge'])
-
-        if len(result_df.values) != 0:
-            new_data[module.capitalize()] = result_df.values.tolist()
-
         # uploading new csv to s3
         files = {'file': (f'{objectName}', new_csv, 'text/csv')}
         response = requests.post(f'{upload_endpoint}/putObject/{bucketName}/{objectName}', files=files)
