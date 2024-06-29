@@ -6,8 +6,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 def Chase(driver):
-    url = "https://careers.jpmorgan.com/US/en/students/programs"
+    url = "https://careers.jpmorgan.com/us/en/students/programs?search=&tags=location__Americas__UnitedStatesofAmerica"
     driver.get(url)
+    time.sleep(0.5)
 
     checkbox = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.ID, 'filter-found-show-open-check'))
@@ -15,7 +16,8 @@ def Chase(driver):
     )
     if not checkbox.is_selected():
         checkbox.click()
-
+    time.sleep(0.5)
+    
     tabs = WebDriverWait(driver, 10).until(
         EC.presence_of_all_elements_located((By.CLASS_NAME, 'tab-nav-link'))
     )
@@ -26,6 +28,7 @@ def Chase(driver):
             tab.click()
             time.sleep(0.5)
             data = get_tab_data(data, driver)
+            time.sleep(0.5)
     
     df = pd.DataFrame(data, columns=['Name', 'Link'])
     df.to_csv("./CSV/chase.csv")

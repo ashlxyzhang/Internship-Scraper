@@ -29,7 +29,6 @@ public class EmailService {
         html.append("<body>");
 
         for (String key : text.keySet()) {
-            System.out.println(key);
 
             ArrayList<ArrayList<String>> val = text.get(key);
 
